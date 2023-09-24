@@ -1,0 +1,29 @@
+name: Lambda formation workflow
+
+on:
+  workflow_call:
+    inputs:
+      functions:
+        description: YAML string to define list of functions
+        type: string
+        required: true
+
+jobs:
+  setup_tfvars:
+    runs-on: ubuntu-latest
+    outputs:
+      terraform_variables: ${{ steps.terraform_variables.outputs.tfvars_json_file_content }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: terraform_variables
+        uses: ./. # thiagomarinho/yaml-to-tfvars@v1?
+        with:
+          variable_name: lambdas_definitions
+          value: ${{ inputs.functions }}
+
+  terraform:
+    needs: [setup_tfvars]
+    uses: ./.github/workflows/terraform_workflow.yaml
+    with:
+      terraform_variables_json: ${{ needs.setup_tfvars.outputs.terraform_variables }}

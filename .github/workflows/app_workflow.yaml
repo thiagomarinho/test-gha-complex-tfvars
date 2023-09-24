@@ -1,0 +1,15 @@
+name: App workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lambda_functions_dev:
+    uses: ./.github/workflows/sample_workflow.yaml
+    with:
+      functions: |
+        - name: test
+          role: my_role
+
+        - name: test
+          role: my_role

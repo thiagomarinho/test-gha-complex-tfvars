@@ -1,0 +1,19 @@
+inputs:
+  variable_name:
+    description: TODO
+    required: false
+  value:
+    description: YAML string to define list of functions
+    required: true
+outputs:
+  tfvars_json_file_content:
+    value: ${{ steps.terraform_variables.outputs.tfvars_json_file_content }}
+runs:
+  using: "composite"
+  steps:
+    - run: echo "${{ inputs.value }}" >> tmp.txt
+    - run: pip install pyyaml
+
+    - id: terraform_variables
+      run: |
+        echo "tfvars_json_file_content=$(python yaml_to_tfvars.py ${{ inputs.variable_name }})" >> $GITHUB_OUTPUT

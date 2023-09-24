@@ -1,0 +1,42 @@
+name: Terraform workflow
+
+on:
+  workflow_call:
+    inputs:
+      terraform_variables:
+        description: Terraform variables that will be used on runtime. Must be in traditional tfvars format.
+        type: string
+        required: false
+      terraform_variables_json:
+        description: Terraform variables that will be used on runtime. Must be in JSON format.
+        type: string
+        required: false
+      working_directory:
+        type: string
+        default: "lambda_workflow/terraform"
+
+jobs:
+  terraform_plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: echo "starting"
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - run: echo '${{ inputs.terraform_variables_json }}' >> terraform.auto.tfvars.json
+        working-directory: ${{ inputs.working_directory }}
+
+      - run: ls -lash ${{ inputs.working_directory }}
+
+      - run: cat terraform.auto.tfvars.json
+        working-directory: ${{ inputs.working_directory }}
+
+      - run: terraform init
+        working-directory: ${{ inputs.working_directory }}
+
+      - run: terraform plan
+        working-directory: ${{ inputs.working_directory }}
+
+      - run: echo "completed"
