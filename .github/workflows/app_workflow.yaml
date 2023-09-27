@@ -13,3 +13,23 @@ jobs:
 
         - name: test
           role: my_role
+
+  lambda_functions_test:
+    uses: ./.github/workflows/sample_workflow.yaml
+    with:
+      functions: |
+        - name: test
+          role: my_role
+
+        - name: test
+          role: my_role
+
+  lambda_functions_prod:
+    uses: ./.github/workflows/sample_workflow.yaml
+    with:
+      functions: |
+        - name: test
+          role: my_role
+
+        - name: test
+          role: my_role
